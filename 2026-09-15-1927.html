@@ -1,0 +1,62 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>A slow day</title>
+<style>
+body { max-width: 42rem; margin: 3rem auto; padding: 0 1rem;
+       font: 1.05rem/1.65 Georgia, serif; color: #1a1a1a; background: #fdfdfb; }
+h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+.date { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+.item-actions { margin: 1.5rem 0; display: flex; gap: 0.5rem; }
+button { cursor: pointer; font: 0.9rem/1 sans-serif; padding: 0.4rem 0.9rem;
+          border: 1px solid #bbb; border-radius: 999px; background: #fff; }
+button:hover { background: #f0f0ec; }
+button.done { background: #e6efe6; border-color: #7a7; }
+.gen-more { margin: 3rem 0; }
+nav a { margin-right: 1rem; font-size: 0.9rem; }
+.empty { font-style: italic; color: #555; }
+</style></head>
+<body>
+<nav><a href="/">&laquo; today</a><a href="/archive">archive</a></nav>
+<h1>A slow day</h1>
+<p class="date">2026-09-15 19:27 &middot; <a href="2026-09-15-1841.html">&laquo; previous brief</a></p>
+<div class="brief"><p><em>Slow day — nothing cleared the bar. Rather than pad this page with takes that don&#x27;t deserve your time, it stays honest: come back tomorrow.</em></p></div>
+
+<div class="gen-more"><button onclick="genMore(this)">Generate more</button></div>
+<script>
+function thumb(id, dir, btn) {
+  fetch('/feedback', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({item_id: id, direction: dir})})
+    .then(() => { btn.classList.add('done'); btn.disabled = true; })
+    .catch(() => { btn.textContent = 'offline?'; });
+}
+function genMore(btn) {
+  btn.disabled = true;
+  btn.textContent = 'generating… takes a few minutes';
+  let before = null;
+  fetch('/status').then(r => r.json()).then(s => {
+    before = s.latest;
+    if (s.running) return;  // already generating; just poll
+    return fetch('/refresh', {method:'POST'});
+  })
+  .then(() => {
+    const poll = setInterval(() => {
+      fetch('/status')
+        .then(r => r.json())
+        .then(s => {
+          if (!s.running) {
+            clearInterval(poll);
+            if (s.latest !== before) {
+              btn.textContent = 'new brief ready';
+              setTimeout(() => location.reload(), 400);
+            } else {
+              btn.disabled = false;
+              btn.textContent = 'nothing new found — try again later';
+            }
+          }
+        })
+        .catch(() => {});
+    }, 10000);
+  })
+  .catch(() => { btn.disabled = false; btn.textContent = 'Generate more'; });
+}
+</script>
+</body></html>

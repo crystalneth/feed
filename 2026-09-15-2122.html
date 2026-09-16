@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Today's brief</title>
+<style>
+body { max-width: 42rem; margin: 3rem auto; padding: 0 1rem;
+       font: 1.05rem/1.65 Georgia, serif; color: #1a1a1a; background: #fdfdfb; }
+h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+.date { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+.item-actions { margin: 1.5rem 0; display: flex; gap: 0.5rem; }
+button { cursor: pointer; font: 0.9rem/1 sans-serif; padding: 0.4rem 0.9rem;
+          border: 1px solid #bbb; border-radius: 999px; background: #fff; }
+button:hover { background: #f0f0ec; }
+button.done { background: #e6efe6; border-color: #7a7; }
+.gen-more { margin: 3rem 0; }
+nav a { margin-right: 1rem; font-size: 0.9rem; }
+.empty { font-style: italic; color: #555; }
+</style></head>
+<body>
+<nav><a href="/">&laquo; today</a><a href="/archive">archive</a></nav>
+<h1>Today's brief</h1>
+<p class="date">2026-09-15 21:22 &middot; <a href="2026-09-15-2028.html">&laquo; previous brief</a></p>
+<div class="brief"><p>Three longform picks today — séances, sabotage, and sausage — loosely braided by what Americans do with grief, and what they&#x27;ll pretend to be to get by in a small town.</p>
+<img src="https://dispatch-media.com/content/images/2026/08/SM_CASSADAGA-HiRes_007a.jpg" alt="" style="width:100%;border-radius:6px;margin:0.4rem 0;" referrerpolicy="no-referrer">
+<p><strong>&quot;You don&#x27;t have the gift.&quot;</strong></p>
+<p>Cassadaga, Florida — <a href="https://dispatch-media.com/the-psychic-capital-of-the-world/" target="_blank">founded in 1894 after a Baptist-turned-medium followed his spirit guide&#x27;s real estate advice</a> — still bills itself the Psychic Capital of the World, and its 200-odd residents see no reason to let death interrupt a conversation. Spiritualist Street crosses Mediumship Way; Harmony Hall&#x27;s board advertises PAST LIVES $40; the Reverend Louis Gates, 74, keeps house rules for his spirits (&quot;if they break anything, I ask them to leave&quot;) and hides an &quot;entertainment purposes only&quot; disclaimer at the bottom of his gloriously blocky website. The piece&#x27;s smartest move is the history: Spiritualism spread from the Fox sisters&#x27; 1848 knocking because disease, child mortality, and a Civil War had left hundreds of thousands of families mourning — church offered faith in an afterlife, but mediums offered the possibility of speaking to it. That&#x27;s why it surfaced: grief economics, not ghost kitsch, turns out to be the real story.</p>
+<img src="https://magazine.atavist.com/wp-content/uploads/2026/03/Wood_Lead1_CROP-scaled.jpg" alt="" style="width:100%;border-radius:6px;margin:0.4rem 0;" referrerpolicy="no-referrer">
+<p><strong>Pool sharks, Boy Scouts, and aspiring saints.</strong></p>
+<p>A century on, war grief found a different outlet. When Paul Good — a pool shark so notorious he had to travel farther and farther for marks — was killed outside Saigon in 1967, months shy of twenty, his brother Jim decided to <a href="https://magazine.atavist.com/2026/buffalo-raiders-vietnam-draft" target="_blank">make the government feel like they&#x27;re not as secure as they think they are</a>. Jim had already logged eight years of seminary (politely asked to leave, in his words, for a chronic inability to obey orders) and a radicalizing Peace Corps stint in the Dominican Republic; now he and a crew of scrupulous Buffalo Catholics, inspired by the Berrigan brothers&#x27; blood-and-napalm draft-board raids, broke into government offices to destroy the paper files running the draft machine. It surfaced for the seminary-to-sabotage arc alone — and, as the writer advises right off the bat, it&#x27;s a story about Catholics — told by Jim himself, now in his eighties and unsure how many offices he actually broke into.</p>
+<img src="https://magazine.atavist.com/wp-content/uploads/2026/04/Davidson_Atavist-Large-1_Tall-scaled.jpg" alt="" style="width:100%;border-radius:6px;margin:0.4rem 0;" referrerpolicy="no-referrer">
+<p><strong>&quot;I&#x27;ll shoot you and leave you out here in a gut pile.&quot;</strong></p>
+<p>Then 1987, and a different kind of performance: Colorado&#x27;s San Luis Valley, where poaching was so normalized the deputy sheriff recruits the new man in town for midnight deer kills and promises to shoot any fed he sniffs out. The new man — <a href="https://magazine.atavist.com/2026/san-luis-valley-wildlife-poaching" target="_blank">a small-town taxidermist and wild-game sausage maker</a> — is really George Morrison, a U.S. Fish and Wildlife special agent with a reformed-poacher sidekick and zero backup, who knows so little about sausage he needs help processing the deer he&#x27;s handed. The deputy, Espinoza, once shot at a game warden&#x27;s plane. It&#x27;s worth the time because the region is a character in its own right — decades of land feuds primed the valley to hate outsiders — and because the two small-town acts rhyme: in Cassadaga the fine print reads &quot;entertainment purposes only,&quot; while in Fort Garland, if Morrison&#x27;s act ever slips, the fine print is the gut pile.
+
+Sources: <a href="https://dispatch-media.com/the-psychic-capital-of-the-world/" target="_blank">Dispatch Media</a> · <a href="https://magazine.atavist.com/2026/buffalo-raiders-vietnam-draft" target="_blank">The Atavist Magazine</a> · <a href="https://magazine.atavist.com/2026/san-luis-valley-wildlife-poaching" target="_blank">The Atavist Magazine</a></p></div>
+<div class="item-actions" data-item="492"><button onclick="thumb(492,'up',this)">&#128077; worth it</button><button onclick="thumb(492,'down',this)">&#128078; not worth it</button></div>
+<div class="gen-more"><button onclick="genMore(this)">Generate more</button></div>
+<script>
+function thumb(id, dir, btn) {
+  fetch('/feedback', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({item_id: id, direction: dir})})
+    .then(() => { btn.classList.add('done'); btn.disabled = true; })
+    .catch(() => { btn.textContent = 'offline?'; });
+}
+function genMore(btn) {
+  btn.disabled = true;
+  btn.textContent = 'generating… takes a few minutes';
+  let before = null;
+  fetch('/status').then(r => r.json()).then(s => {
+    before = s.latest;
+    if (s.running) return;  // already generating; just poll
+    return fetch('/refresh', {method:'POST'});
+  })
+  .then(() => {
+    const poll = setInterval(() => {
+      fetch('/status')
+        .then(r => r.json())
+        .then(s => {
+          if (!s.running) {
+            clearInterval(poll);
+            if (s.latest !== before) {
+              btn.textContent = 'new brief ready';
+              setTimeout(() => location.reload(), 400);
+            } else {
+              btn.disabled = false;
+              btn.textContent = 'nothing new found — try again later';
+            }
+          }
+        })
+        .catch(() => {});
+    }, 10000);
+  })
+  .catch(() => { btn.disabled = false; btn.textContent = 'Generate more'; });
+}
+</script>
+</body></html>

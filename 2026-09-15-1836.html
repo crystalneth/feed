@@ -1,0 +1,71 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Today's brief</title>
+<style>
+body { max-width: 42rem; margin: 3rem auto; padding: 0 1rem;
+       font: 1.05rem/1.65 Georgia, serif; color: #1a1a1a; background: #fdfdfb; }
+h1 { font-size: 1.6rem; margin-bottom: 0.2rem; }
+.date { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+.item-actions { margin: 1.5rem 0; display: flex; gap: 0.5rem; }
+button { cursor: pointer; font: 0.9rem/1 sans-serif; padding: 0.4rem 0.9rem;
+          border: 1px solid #bbb; border-radius: 999px; background: #fff; }
+button:hover { background: #f0f0ec; }
+button.done { background: #e6efe6; border-color: #7a7; }
+.gen-more { margin: 3rem 0; }
+nav a { margin-right: 1rem; font-size: 0.9rem; }
+.empty { font-style: italic; color: #555; }
+</style></head>
+<body>
+<nav><a href="/">&laquo; today</a><a href="/archive">archive</a></nav>
+<h1>Today's brief</h1>
+<p class="date">2026-09-15 18:36 &middot; <a href="2026-09-15-1827.html">&laquo; previous brief</a></p>
+<div class="brief"><p><strong>A leaderboard for darkness.</strong></p>
+<p>Eclipse-chasing turns out to be a competitive sport with a stat sheet: <a href="https://longreads.com/2026/09/07/on-tour-with-the-eclipse-chasers/" target="_blank">Donald Liebenberg tops eclipse-chaser-log.com with 2 hours, 27 minutes, and 41 seconds of accumulated darkness across 27 total eclipses</a>. Rudi Zygadlo embeds with the umbraphile faithful — a British couple who&#x27;ve arranged their entire lives around minutes of shadow, fellow chasers by the hotel pool gone shifty the moment talk turns to viewing spots — before stationing himself on a dusty Spanish hillside with a warm glass of local white for his own first totality. He logs 1 minute 38 seconds, near the bottom of the league, and starts to understand the devotion. It&#x27;s here because a subculture with its own record book, veterans, and rookies is exactly the sort of obscure institution worth knowing exists.</p>
+<p><strong>Shame used to call the fouls.</strong></p>
+<p>The New Yorker opens a series on the decline of shame with the NBA&#x27;s long war on tanking — from the 1984 Rockets&#x27; alleged season-tossing for a coin-flip shot at Hakeem Olajuwon, through the first lottery in 1985, when <a href="https://www.newyorker.com/news/fault-lines/the-death-of-shame-is-tearing-us-apart" target="_blank">many still believe the league froze the Knicks envelope so the commissioner could identify it by touch</a>, to Sam Hinkie&#x27;s proudly shameless Process in Philadelphia. The thesis, via former NFLPA president Domonique Foxworth: shame was how groups enforced norms without state intervention, and an &quot;optimization culture&quot; that treats everything as return on investment has removed the guardrails. The author weighs whether social media changed how norms get enforced or opportunists simply broke the seal, lands mostly on the former, and concludes that if shame can&#x27;t stop private equity from strip-mining kids&#x27; sports leagues, regulation will have to do shame&#x27;s old job. Worth it for a sociology-of-norms argument wearing a basketball jersey — and for refusing to cheer for either side.</p>
+<p><strong>The hurry is the harm.</strong></p>
+<p>An Aeon researcher argues the screen-time debate measures the wrong variable: we obsess over minutes watched and content ratings while ignoring pace — whether media give a child <a href="https://aeon.co/essays/its-not-just-screen-time-kids-are-bombarded-by-hectic-media" target="_blank">time to &quot;complete an act of attention&quot;</a>. StoryBots&#x27; rapid-fire jokes and Paw Patrol&#x27;s whiplash rescues deliver lessons in empathy and perseverance that evaporate before they can settle into memory, because noticing that someone else feels something different takes time a fast cut won&#x27;t grant. Her Slow Media rubric praises the ritual gentleness of Mister Rogers, Teletubbies and Bluey, while conceding slow isn&#x27;t automatically good — only that good media leave room for thought. It surfaced for reframing the tiredest debate in parenting around one design feature nobody regulates; fittingly, it names AI quick-summaries as a symptom of the very rush it critiques, which makes this brief either delicious irony or a small act of resistance, depending on how slowly you read it.
+
+The quiet through-line: the columnist and the researcher share a villain — the optimization mindset that treats everything as an asset, whether it&#x27;s a basketball season or a child&#x27;s nervous system — while the umbraphiles stand as the counter-image, people who rearrange whole lives around 98 seconds of something that refuses to hurry.
+
+Sources: <a href="https://longreads.com/2026/09/07/on-tour-with-the-eclipse-chasers/" target="_blank">Longreads</a> · <a href="https://www.newyorker.com/news/fault-lines/the-death-of-shame-is-tearing-us-apart" target="_blank">The New Yorker</a> · <a href="https://aeon.co/essays/its-not-just-screen-time-kids-are-bombarded-by-hectic-media" target="_blank">Aeon</a></p></div>
+<div class="item-actions" data-item="104"><button onclick="thumb(104,'up',this)">&#128077; worth it</button><button onclick="thumb(104,'down',this)">&#128078; not worth it</button></div>
+<div class="gen-more"><button onclick="genMore(this)">Generate more</button></div>
+<script>
+function thumb(id, dir, btn) {
+  fetch('/feedback', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({item_id: id, direction: dir})})
+    .then(() => { btn.classList.add('done'); btn.disabled = true; })
+    .catch(() => { btn.textContent = 'offline?'; });
+}
+function genMore(btn) {
+  btn.disabled = true;
+  btn.textContent = 'generating… takes a few minutes';
+  let before = null;
+  fetch('/status').then(r => r.json()).then(s => {
+    before = s.latest;
+    if (s.running) return;  // already generating; just poll
+    return fetch('/refresh', {method:'POST'});
+  })
+  .then(() => {
+    const poll = setInterval(() => {
+      fetch('/status')
+        .then(r => r.json())
+        .then(s => {
+          if (!s.running) {
+            clearInterval(poll);
+            if (s.latest !== before) {
+              btn.textContent = 'new brief ready';
+              setTimeout(() => location.reload(), 400);
+            } else {
+              btn.disabled = false;
+              btn.textContent = 'nothing new found — try again later';
+            }
+          }
+        })
+        .catch(() => {});
+    }, 10000);
+  })
+  .catch(() => { btn.disabled = false; btn.textContent = 'Generate more'; });
+}
+</script>
+</body></html>
